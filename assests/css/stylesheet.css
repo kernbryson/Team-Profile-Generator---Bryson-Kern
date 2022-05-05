@@ -1,0 +1,24 @@
+.banner{
+    text-align: center;
+    background-color:#CCAD8F ;
+    font-size: 50px;
+    padding: 15px;
+    color: #255C99;
+}
+.mycards{
+    color: white;
+    font-size: 20px;
+    margin: 5px;
+}
+.lists li{
+    background-color: white;
+}
+.cardstyle{
+    margin: 20px;
+   
+}
+.cardplacement{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
