@@ -3,7 +3,9 @@
 const Manager = require("./lib/manager");
 const Engineer = require("./lib/engineer");
 const Intern = require("./lib/intern");
-
+const managerData = require("./lib/manager");
+const engineerData = require("./lib/engineer");
+const internData = require("./lib/intern");
 const inquirer = require("inquirer");
 const fs = require("fs");
 var selectedMember = "";
@@ -53,12 +55,13 @@ const teamSetup = () => {
     .then(function (data) {
       console.log(data);
       addMember(data.teamMembers);
+      const saveManager = managerData(data);
     });
 };
 teamSetup();
 
 function addMember(wantedRole) {
-  if (wantedRole || choice.moreRoles  === "yes") {
+  if (wantedRole || choice.moreRoles === "yes") {
     inquirer
       .prompt([
         {
@@ -73,10 +76,10 @@ function addMember(wantedRole) {
         selectedMember = users.role;
         if (selectedMember === "Engineer") {
           const engineer = new workerType("Engineer");
-          engineer.workerData();
+          engineer.workerData(selectedMember);
         } else {
           const intern = new workerType("Intern");
-          intern.workerData();
+          intern.workerData(selectedMember);
         }
       });
   } else {
@@ -88,7 +91,7 @@ class workerType {
   constructor(position) {
     this.position = position;
   }
-  workerData() {
+  workerData(selectedMember) {
     return inquirer
       .prompt([
         {
@@ -115,11 +118,12 @@ class workerType {
       ])
       .then(function (users) {
         console.log(users);
-        gatherSpecificRoleData();
+        
+        gatherSpecificRoleData(users, selectedMember);
       });
   }
 }
-function gatherSpecificRoleData() {
+function gatherSpecificRoleData(users, selectedMember) {
   if (selectedMember === "Intern") {
     return inquirer
       .prompt([
@@ -133,6 +137,7 @@ function gatherSpecificRoleData() {
       ])
       .then(function (school) {
         console.log(school);
+        const saveIntern = internData(users, selectedMember, school.internSchool);
         addAnotherRole();
       });
   } else {
@@ -148,6 +153,7 @@ function gatherSpecificRoleData() {
       ])
       .then(function (github) {
         console.log(github);
+        const saveEngineer = engineerData(users, selectedMember, github.engineerGithub);
         addAnotherRole();
       });
   }
@@ -166,11 +172,10 @@ function addAnotherRole() {
     ])
     .then(function (choice) {
       console.log(choice);
-      if(choice.moreRoles === "Yes"){
-      
-      addMember(choice.moreRoles);
-      }else{
-        console.log("finished creating team!")
+      if (choice.moreRoles === "Yes") {
+        addMember(choice.moreRoles);
+      } else {
+        console.log("finished creating team!");
       }
     });
 }
